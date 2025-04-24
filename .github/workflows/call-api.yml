@@ -1,0 +1,28 @@
+name: Build and Test Jira API
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.21
+
+      - name: Build Go binary
+        run: go build -o jira-caller main.go
+
+      - name: Run Jira API call
+        run: ./jira-caller
+        env:
+          JIRA_USER: ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+          JIRA_URL: ${{ secrets.JIRA_URL }}
